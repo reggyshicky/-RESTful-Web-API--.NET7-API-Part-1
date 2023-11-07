@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MagicVilla_VillaAPI.Controllers
 {
-    [Route("api/VillaAPI")]
+    [Route("api/VillaAPI")]      //alternative [Route("api/[controller]")]   
     [ApiController]
     public class VillaAPIController  : ControllerBase  //base class provided by ASP.NET Core for building controllers in a Web API
     {
