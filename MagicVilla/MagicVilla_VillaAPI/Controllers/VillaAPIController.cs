@@ -11,14 +11,23 @@ namespace MagicVilla_VillaAPI.Controllers
     public class VillaAPIController  : ControllerBase  //base class provided by ASP.NET Core for building controllers in a Web API
     {
         [HttpGet] //notifies the swagger documentation that this endpoint is a GET endpoint
-        public IEnumerable<VillaDTO> GetVillas()
+        public ActionResult<IEnumerable<VillaDTO>> GetVillas() //ActionResult is a type that can be returned from action methods to represent different kinds of HTTP responses
         {
-            return VillaStore.villaList;
+            return Ok(VillaStore.villaList);
         }
         [HttpGet("{id:int}")]
-        public VillaDTO GetVilla(int id)
+        public ActionResult<VillaDTO> GetVilla(int id)
         {
-            return VillaStore.villaList.FirstOrDefault(u => u.Id == id);
+            if (id == 0)
+            {
+                return BadRequest();
+            }
+            var villa = VillaStore.villaList.FirstOrDefault(u => u.Id == id);
+            if (villa == null)
+            {
+                return NotFound();
+            }
+            return Ok(villa);
         }
     }
 }
