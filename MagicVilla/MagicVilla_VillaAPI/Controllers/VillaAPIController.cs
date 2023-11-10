@@ -12,12 +12,26 @@ namespace MagicVilla_VillaAPI.Controllers
     [ApiController]
     public class VillaAPIController  : ControllerBase  //base class provided by ASP.NET Core for building controllers in a Web API
     {
+        private readonly ILogger<VillaAPIController> _logger;
+
+        public VillaAPIController(ILogger<VillaAPIController> logger)
+        {
+            
+            _logger = logger;
+        }
+
+
         [HttpGet] //notifies the swagger documentation that this endpoint is a GET endpoint
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<IEnumerable<VillaDTO>> GetVillas() //ActionResult is a type that can be returned from action methods to represent different kinds of HTTP responses
         {
+            _logger.LogInformation("Getting all villas");
             return Ok(VillaStore.villaList);
         }
+
+
+
+
         [HttpGet("{id:int}", Name = "GetVilla")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -27,6 +41,7 @@ namespace MagicVilla_VillaAPI.Controllers
         {
             if (id == 0)
             {
+                _logger.LogError("Get Villa Error with Id" + id);
                 return BadRequest();
             }
             var villa = VillaStore.villaList.FirstOrDefault(u => u.Id == id);
@@ -36,6 +51,8 @@ namespace MagicVilla_VillaAPI.Controllers
             }
             return Ok(villa);
         }
+
+
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -71,6 +88,10 @@ namespace MagicVilla_VillaAPI.Controllers
 
 
         }
+
+
+
+
         [HttpDelete("{id:int}", Name = "DeleteVilla")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -92,6 +113,9 @@ namespace MagicVilla_VillaAPI.Controllers
             return NoContent();
         }
 
+
+
+
         [HttpPut("{id:int}", Name = "UpdateVilla")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -112,6 +136,9 @@ namespace MagicVilla_VillaAPI.Controllers
 
             return NoContent();
         }
+
+
+
 
         //Patch. add some nuget packages, 
         //https://jsonpatch.com/
