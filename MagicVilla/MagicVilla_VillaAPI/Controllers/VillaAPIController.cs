@@ -12,12 +12,11 @@ namespace MagicVilla_VillaAPI.Controllers
     [ApiController]
     public class VillaAPIController  : ControllerBase  //base class provided by ASP.NET Core for building controllers in a Web API
     {
-        private readonly ILogger<VillaAPIController> _logger;
-
-        public VillaAPIController(ILogger<VillaAPIController> logger)
+      
+        
+        public VillaAPIController()
         {
-            
-            _logger = logger;
+           
         }
 
 
@@ -25,7 +24,6 @@ namespace MagicVilla_VillaAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<IEnumerable<VillaDTO>> GetVillas() //ActionResult is a type that can be returned from action methods to represent different kinds of HTTP responses
         {
-            _logger.LogInformation("Getting all villas");
             return Ok(VillaStore.villaList);
         }
 
@@ -41,7 +39,6 @@ namespace MagicVilla_VillaAPI.Controllers
         {
             if (id == 0)
             {
-                _logger.LogError("Get Villa Error with Id" + id);
                 return BadRequest();
             }
             var villa = VillaStore.villaList.FirstOrDefault(u => u.Id == id);
