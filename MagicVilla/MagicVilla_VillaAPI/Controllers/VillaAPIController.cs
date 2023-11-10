@@ -1,6 +1,7 @@
 ﻿using MagicVilla_VillaAPI.Data;
 using MagicVilla_VillaAPI.Models;
 using MagicVilla_VillaAPI.Models.Dto;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 
@@ -111,5 +112,34 @@ namespace MagicVilla_VillaAPI.Controllers
 
             return NoContent();
         }
+
+        //Patch. add some nuget packages, 
+        //https://jsonpatch.com/
+        //Microsoft.AspNetCore.JsonPatch
+        //Microsoft.AspNetCore.MVC.NewtonSoftJson
+        [HttpPatch("{id:int}", Name = "UpdatePartialVilla")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+
+        public IActionResult UpdatePartialVilla(int id, JsonPatchDocument<VillaDTO> patchDTO)
+        {
+            if (patchDTO == null || id == 0)
+            {
+                return BadRequest();
+            }
+            var villa = VillaStore.villaList.FirstOrDefault(u=> u.Id == id);
+            if (villa == null)
+            {
+                return NotFound();
+            }
+            patchDTO.ApplyTo(villa, ModelState);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            return NoContent();
+        }
+        //by passing ModelState  to the ApplyTo method, you allow the method to populate the ModelState dictionary with any validation errors that may arise during the patch application
+
     }
 }
