@@ -19,10 +19,12 @@ namespace MagicVilla_VillaAPI.Controllers
     {
         protected APIResponse _response;
         private readonly IVillaNumberRepository _dbVillaNumber;
+        private readonly IVillaRepository _dbVilla;
         private readonly IMapper _mapper;
-        public VillaNumberAPIController(IVillaNumberRepository dbVillaNumber, IMapper mapper)
+        public VillaNumberAPIController(IVillaNumberRepository dbVillaNumber, IMapper mapper, IVillaRepository dbVilla)
         {
             _dbVillaNumber = dbVillaNumber;
+            _dbVilla = dbVilla;
             _mapper = mapper;
             this._response = new();
             //this is used to refer to the instance of the class that the method or property belongs to
@@ -100,6 +102,11 @@ namespace MagicVilla_VillaAPI.Controllers
                 if (await _dbVillaNumber.GetAsync(u => u.VillaNo == createDTO.VillaNo) != null)
                 {
                     ModelState.AddModelError("CustomErrors", "Villa Number already exists");
+                    return BadRequest(ModelState);
+                }
+                if(await _dbVilla.GetAsync(u=>u.Id == createDTO.VillaID) == null) 
+                {
+                    ModelState.AddModelError("CustomError", "Villa ID is Invalid!");
                     return BadRequest(ModelState);
                 }
                 if (createDTO == null)
@@ -186,7 +193,11 @@ namespace MagicVilla_VillaAPI.Controllers
                 {
                     return BadRequest();
                 }
-
+                if (await _dbVilla.GetAsync(u => u.Id == updateDTO.VillaID) == null)
+                {
+                    ModelState.AddModelError("CustomError", "Villa ID is Invalid!");
+                    return BadRequest(ModelState);
+                }
                 VillaNumber model = _mapper.Map<VillaNumber>(updateDTO); //short and alternative, Converting villaNumberUpdateDTO to VillaNumber
 
                 await _dbVillaNumber.UpdateAsync(model);
@@ -202,18 +213,10 @@ namespace MagicVilla_VillaAPI.Controllers
             }
             return _response;
         }
-
-
-
-
-        //Patch. add some nuget packages, 
-        //https://jsonpatch.com/
-        //Microsoft.AspNetCore.JsonPatch
-        //Microsoft.AspNetCore.MVC.NewtonSoftJson
+        /*
         [HttpPatch("{id:int}", Name = "UpdatePartialVillaNumber")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-
         public async Task<IActionResult> UpdatePartialVillaNumber(int id, JsonPatchDocument<VillaNumberUpdateDTO> patchDTO)
         {
             if (patchDTO == null || id == 0)
@@ -222,9 +225,6 @@ namespace MagicVilla_VillaAPI.Controllers
             }
             var villaNumber = await _dbVillaNumber.GetAsync(u => u.VillaNo == id, tracked: false);
             VillaNumberUpdateDTO villaNumberDTO = _mapper.Map<VillaNumberUpdateDTO>(villaNumber);
-
-            //in the above code, inside Map<VillaUpdateDTO>(villa), the output is VillaUpdateDTO and the source is villa
-
             if (villaNumber == null)
             {
                 return BadRequest();
@@ -239,7 +239,7 @@ namespace MagicVilla_VillaAPI.Controllers
             }
             return NoContent();
         }
-        //by passing ModelState  to the ApplyTo method, you allow the method to populate the ModelState dictionary with any validation errors that may arise during the patch application
+        */
 
     }
 }
