@@ -213,7 +213,7 @@ namespace MagicVilla_VillaAPI.Controllers
             }
             return _response;
         }
-        /*
+
         [HttpPatch("{id:int}", Name = "UpdatePartialVillaNumber")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -239,7 +239,7 @@ namespace MagicVilla_VillaAPI.Controllers
             }
             return NoContent();
         }
-        */
+
 
     }
 }
