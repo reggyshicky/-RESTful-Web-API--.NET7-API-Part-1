@@ -28,7 +28,6 @@ namespace MagicVilla_VillaAPI.Controllers
             //this is used to refer to the instance of the class that the metho or property belongs to
         }
 
-
         [HttpGet] //notifies the swagger documentation that this endpoint is a GET endpoint
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<APIResponse>> GetVillas() //ActionResult is a type that can be returned from action methods to represent different kinds of HTTP responses
@@ -49,7 +48,6 @@ namespace MagicVilla_VillaAPI.Controllers
             }
             return _response;
         }
-
 
 
 

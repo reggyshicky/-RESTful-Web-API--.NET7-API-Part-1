@@ -3,7 +3,6 @@ using MagicVilla_Web.Models;
 using MagicVilla_Web.Services.IServices;
 using Newtonsoft.Json;
 using System.Text;
-using System.Text.Json.Serialization;
 
 namespace MagicVilla_Web.Services
 {
@@ -56,7 +55,7 @@ namespace MagicVilla_Web.Services
             {
                 var dto = new APIResponse
                 {
-                    ErrorMessages = new List<string> { Convert.ToString(ex.Message) }
+                    ErrorMessages = new List<string> { Convert.ToString(ex.Message) },
                     IsSuccess = false
                 };
                 var res = JsonConvert.SerializeObject(dto);
